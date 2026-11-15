@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="БАЗА">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="format-detection" content="telephone=no">
+<title>БАЗА</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#0b0c0e;--card:#16181c;--card2:#1d2025;--line:#2a2e35;--text:#f2f3f5;--muted:#8e939c;--dim:#5c616a;
+  --acc:#c6ff3d;--accT:#0b0c0e;--k:#ffb54a;--p:#4fd1ff;--f:#ff7d6e;--c:#b896ff;--ok:#52e08a;--bad:#ff5a5a;--warn:#ffc547;
+  --r:20px;--sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+body{padding-bottom:calc(84px + var(--sab));overscroll-behavior-y:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+input,textarea,select{font:inherit;color:var(--text);background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;width:100%;min-height:52px;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,textarea:focus{border-color:var(--acc)}
+textarea{resize:none;min-height:52px}
+.hdr{position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg) 85%,rgba(11,12,14,0));padding:calc(var(--sat) + 8px) 14px 10px}
+.top{display:flex;align-items:center;justify-content:space-between;height:40px}
+.brand{font-weight:900;letter-spacing:.14em;font-size:20px}
+.brand small{font-weight:600;letter-spacing:0;color:var(--muted);font-size:15px;margin-left:8px}
+.gear{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--muted);font-size:22px}
+.ai{margin-top:6px;background:linear-gradient(135deg,#1b2112,#15181c 60%);border:1px solid #33401b;border-radius:var(--r);padding:12px 14px;position:relative}
+.ai .lbl{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--acc);text-transform:uppercase;display:flex;justify-content:space-between}
+.ai .lbl span{color:var(--muted);letter-spacing:.02em;font-weight:600;text-transform:none}
+.ai .l{font-size:15.5px;line-height:1.3;margin-top:3px}
+.ai .l b{color:var(--acc);font-weight:700}
+.ai .l.warn{color:var(--warn)} .ai .l.bad{color:#ff8a7a}
+.hdr.compact .ai .l:nth-child(n+4){display:none}
+.wrap{padding:4px 14px 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:12px}
+.card h3{margin:0 0 10px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card h3 .act{letter-spacing:0;text-transform:none;color:var(--acc);font-size:15px;font-weight:700;min-height:36px;padding:0 4px}
+.mut{color:var(--muted)} .dim{color:var(--dim)} .sm{font-size:14px} .xs{font-size:12.5px}
+.row{display:flex;align-items:center;gap:10px} .sp{flex:1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.btn{min-height:54px;border-radius:16px;padding:0 18px;font-weight:700;background:var(--card2);border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.pri{background:var(--acc);color:var(--accT);border-color:var(--acc)}
+.btn.full{width:100%}
+.btn.ghost{background:transparent}
+.btn.red{color:#ff8a7a}
+.btn:active{transform:scale(.98);opacity:.9}
+.bar{height:12px;border-radius:8px;background:#262a31;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;border-radius:8px}
+.bar .cor{position:absolute;top:0;bottom:0;border-left:2px solid rgba(255,255,255,.35);border-right:2px solid rgba(255,255,255,.35)}
+.mac{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.mac .t{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.mac .n{font-size:15px;font-weight:700;margin-top:6px;white-space:nowrap}
+.mac .n em{font-style:normal;color:var(--muted);font-weight:600}
+.chk{display:flex;align-items:center;gap:14px;min-height:58px;width:100%;text-align:left;padding:6px 2px}
+.box{width:32px;height:32px;border-radius:10px;border:2px solid #444a53;flex:none;display:grid;place-items:center;font-weight:900;font-size:18px;color:var(--accT)}
+.on .box,.box.on{background:var(--acc);border-color:var(--acc)}
+.chk .tx{flex:1}
+.chk .tx small{display:block;color:var(--muted);font-size:14px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 11px;font-size:13.5px;font-weight:700;background:var(--card2);border:1px solid var(--line);white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:#24533a;background:#11251a}
+.pill.no{color:var(--warn);border-color:#4b3d17;background:#221c0c}
+.lines .ln{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.lines .ln:first-of-type{border-top:0;padding-top:0}
+.lines .num{width:26px;height:26px;border-radius:8px;background:var(--card2);display:grid;place-items:center;font-size:14px;font-weight:800;color:var(--acc);flex:none;margin-top:1px}
+.lines .k{font-size:13px;color:var(--muted);font-weight:700}
+.stat{background:var(--card2);border-radius:16px;padding:12px}
+.stat .k{font-size:13px;color:var(--muted);font-weight:700}
+.stat .v{font-size:24px;font-weight:800;margin-top:2px}
+.stat .v small{font-size:14px;color:var(--muted);font-weight:600}
+.ex{border-top:1px solid var(--line);padding:12px 0}
+.ex:first-of-type{border-top:0;padding-top:2px}
+.ex .nm{font-weight:800;font-size:18px}
+.ex .meta{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ex .how{color:var(--muted);font-size:14.5px}
+.sets{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.set{width:54px;height:54px;border-radius:16px;border:2px solid #3a3f47;font-weight:800;font-size:17px;color:var(--muted)}
+.set.on{background:var(--acc);border-color:var(--acc);color:var(--accT)}
+.ex.done .nm::after{content:" ✓";color:var(--acc)}
+.days{display:flex;gap:6px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.dchip{flex:1;min-width:44px;height:54px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-weight:800;font-size:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.dchip small{font-size:10.5px;color:var(--muted);font-weight:700}
+.dchip.sel{border-color:var(--acc);color:var(--acc)}
+.dchip.today{background:#232a14}
+.food{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);width:100%;text-align:left}
+.food img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none}
+.food .nm{font-weight:700}
+.food .m{font-size:13.5px;color:var(--muted)}
+.food .kc{font-weight:800;white-space:nowrap}
+.meal-h{font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:14px 0 2px}
+.meal-h:first-of-type{margin-top:0}
+.plan{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.plan:first-of-type{border-top:0}
+.plan .nm{font-weight:700}
+.plan .m{font-size:13.5px;color:var(--muted)}
+.plan .eat{min-height:48px;min-width:76px;border-radius:14px;background:var(--card2);border:1px solid var(--line);font-weight:800;font-size:15px;padding:0 10px}
+.plan .eat.done{color:var(--ok);border-color:#24533a;background:#11251a}
+.rule{background:#1a1d12;border:1px solid #2f3a17;border-radius:14px;padding:10px 12px;font-size:14.5px;color:#d9e6b8;margin-top:10px}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(14,15,18,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:6px 8px calc(6px + var(--sab))}
+.tab{height:62px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:700;color:var(--muted)}
+.tab svg{width:26px;height:26px}
+.tab.on{color:var(--acc)}
+.fab{position:fixed;right:14px;bottom:calc(92px + var(--sab));z-index:25;display:flex;gap:10px}
+.fab button{height:60px;min-width:60px;border-radius:20px;background:var(--acc);color:var(--accT);font-weight:800;font-size:17px;padding:0 18px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.fab button.sec{background:#262a31;color:var(--text);border:1px solid #3a3f47}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:#121418;border-top-left-radius:26px;border-top-right-radius:26px;border-top:1px solid var(--line);max-height:92vh;overflow-y:auto;padding:10px 16px calc(18px + var(--sab));transform:translateY(105%);visibility:hidden;transition:transform .25s ease,visibility 0s .25s;-webkit-overflow-scrolling:touch}
+.sheet.open{transform:none;visibility:visible;transition:transform .25s ease}
+.sheet .grab{width:44px;height:5px;border-radius:3px;background:#3a3f47;margin:0 auto 10px}
+.sheet h2{margin:2px 0 12px;font-size:22px}
+.fld{margin-top:10px}
+.fld label{display:block;font-size:13.5px;color:var(--muted);font-weight:700;margin:0 0 5px 2px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg button{min-height:48px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-weight:700;font-size:15px}
+.seg button.on{background:var(--acc);color:var(--accT);border-color:var(--acc)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;min-height:44px;padding:0 14px;border-radius:999px;background:var(--card2);border:1px solid var(--line);font-weight:700;font-size:15px}
+.chips button.on{border-color:var(--acc);color:var(--acc)}
+.toast{position:fixed;left:14px;right:14px;bottom:calc(96px + var(--sab));z-index:60;background:#22262d;border:1px solid #3a3f47;border-radius:16px;padding:12px 14px;display:none;align-items:center;gap:10px;font-weight:600}
+.toast button{color:var(--acc);font-weight:800;min-height:40px;padding:0 6px}
+.timer{position:fixed;left:14px;right:14px;bottom:calc(96px + var(--sab));z-index:40;background:#1b2112;border:1px solid #33401b;border-radius:18px;padding:10px 14px;display:none;align-items:center;gap:12px}
+.timer .tt{font-size:28px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--acc)}
+.chart{width:100%;height:auto;display:block;margin-top:6px}
+.photo-prev{width:100%;max-height:260px;object-fit:cover;border-radius:16px;margin-bottom:10px}
+.res .whatline{font-size:19px;font-weight:800}
+.note{font-size:14px;color:var(--muted);margin-top:8px}
+.spinner{width:22px;height:22px;border:3px solid #3a3f47;border-top-color:var(--acc);border-radius:50%;animation:sp 1s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+.water{display:flex;gap:4px;margin:10px 0 4px}
+.water i{flex:1;height:26px;border-radius:7px;background:#262a31}
+.water i.on{background:var(--p)}
+.water i.ok{outline:1px dashed #4fd1ff66}
+.tag{font-size:12px;font-weight:800;padding:3px 8px;border-radius:8px;background:var(--card2);color:var(--muted);letter-spacing:0;text-transform:none}
+.tag.opt{color:var(--c)}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="tabs" id="tabs">
+  <button class="tab" data-tab="gen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Общее</button>
+  <button class="tab" data-tab="food"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 21V3c-2.5 1.5-3.5 4.5-3.5 8h3.5"/></svg>Еда</button>
+  <button class="tab" data-tab="train"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M3.5 9v6M17.5 6.5v11M20.5 9v6M6.5 12h11"/></svg>Тренировка</button>
+</nav>
+<div class="fab hidden" id="fab">
+  <button class="sec" id="fabPhoto" aria-label="Фото еды">📷 Фото</button>
+  <button id="fabAdd">+ Еда</button>
+</div>
+<div class="timer" id="timer"><div class="tt" id="timerT">0:00</div><div class="sp sm" id="timerL">Отдых</div><button class="btn" style="min-height:44px" id="timerStop">Стоп</button></div>
+<div class="toast" id="toast"><span class="sp" id="toastT"></span><button id="toastB"></button></div>
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+<input type="file" accept="image/*" capture="environment" id="camIn" class="hidden">
+<input type="file" accept="image/*" id="galIn" class="hidden">
+<script>
+'use strict';
+/* ========== ДАННЫЕ ПО УМОЛЧАНИЮ (из профиля) ========== */
+const KEY='baza.v1';
+const BASE_PRODUCTS=[
+ {id:'duck',name:'Утка обрезанная',note:'без кожи и видимого жира',unit:'г',kcal:130,p:22,f:4,c:0,base:true},
+ {id:'egg',name:'Яйцо',note:'1 штука',unit:'шт',kcal:90,p:7,f:6,c:0.5,base:true},
+ {id:'buck',name:'Гречка сухая',note:'вес до варки',unit:'г',kcal:340,p:13,f:3,c:62,base:true},
+ {id:'tom',name:'Помидор',unit:'г',kcal:20,p:1,f:0,c:4,base:true},
+ {id:'cuc',name:'Огурец',unit:'г',kcal:15,p:0.7,f:0,c:3,base:true},
+ {id:'banana',name:'Банан',unit:'г',kcal:90,p:1,f:0,c:22,base:true},
+ {id:'apple',name:'Яблоко',unit:'г',kcal:50,p:0.4,f:0,c:12,base:true},
+];
+const DEFAULT_PLAN=[
+ {pid:'buck',amount:320,hint:'взвешивать до варки'},
+ {pid:'duck',amount:500,hint:'взвешивать уже без кожи и жира'},
+ {pid:'egg',amount:4},
+ {pid:'tom',amount:250},
+ {pid:'cuc',amount:250},
+ {pid:'banana',amount:120,alt:'apple',altAmount:150},
+];
+function defaults(){return{
+ v:1,
+ lines:['Руки, стойка у стены, видимый пресс','База в руках и ногах, БЖЖ три раза в неделю','Закрывать белок и калории, делать тренировку этого дня','Сон, вода, без хлеба и сахара'],
+ profile:{age:19,height:177,morningRef:82},
+ targets:{kcal:[2400,2300,2500],p:[180,170,190],f:[55,45,70],c:[250,220,280]},
+ products:JSON.parse(JSON.stringify(BASE_PRODUCTS)),
+ plan:JSON.parse(JSON.stringify(DEFAULT_PLAN)),
+ pikeEasy:false,
+ ai:{key:'',base:'https://api.x.ai/v1',model:'grok-4.7'},
+ days:{}, weights:[]
+}}
+let S;
+function load(){try{const r=localStorage.getItem(KEY);if(r)return Object.assign(defaults(),JSON.parse(r))}catch(e){}return defaults()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Память заполнена — удали старые записи с фото')}}
+S=load();
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+
+/* ========== УТИЛИТЫ ========== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r0=n=>Math.round(n)||0;
+function fmt(n,d=0){if(n==null||isNaN(n))return '—';const m=Math.pow(10,d);const v=Math.round(n*m)/m;return String(v).replace('.',',').replace('-','−')}
+const num=v=>{if(v===''||v==null)return NaN;return parseFloat(String(v).replace(',','.').replace('−','-'))};
+const now=()=>new Date();
+const dkey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>dkey(now());
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const parseKey=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const DOW=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+const DOWS=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const MON=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const uid=()=>Math.random().toString(36).slice(2,9);
+const EMPTY=()=>({food:[],water:0,creatine:false,steps:false,sets:{},bjj:false});
+function day(k,create=true){if(!S.days[k]){if(!create)return EMPTY();S.days[k]=EMPTY()}return S.days[k]}
+const prod=id=>S.products.find(p=>p.id===id);
+function macroOf(p,amount){const k=p.unit==='шт'?amount:amount/100;return{kcal:p.kcal*k,p:p.p*k,f:p.f*k,c:p.c*k}}
+function totals(k){const t={kcal:0,p:0,f:0,c:0};for(const e of day(k,false).food){t.kcal+=e.kcal;t.p+=e.p;t.f+=e.f;t.c+=e.c}return t}
+function remain(t){const T=S.targets;return{kcal:T.kcal[0]-t.kcal,p:T.p[0]-t.p,f:T.f[0]-t.f,c:T.c[0]-t.c}}
+const pl=(n,a,b,c)=>{n=Math.abs(Math.round(n))%100;const n1=n%10;if(n>10&&n<20)return c;if(n1>1&&n1<5)return b;if(n1==1)return a;return c};
+const hhmm=()=>String(now().getHours()).padStart(2,'0')+':'+String(now().getMinutes()).padStart(2,'0');
+
+/* ========== ТРЕНИРОВКИ ========== */
+const FORE=[
+ {id:'pr',name:'Pronation + Rising',sets:5,reps:'40–60',rest:'45–60 сек',how:'Крутить кисть внутрь и наружу.'},
+ {id:'rc',name:'Reverse curls',sets:4,reps:'12–15',rest:'60 сек',how:'Хват сверху, локти у корпуса.'},
+ {id:'wf',name:'Wrist flexions',sets:4,reps:'до отказа, обычно 15–25',rest:'45 сек',how:'Поднимать только кистью.'},
+];
+const X={
+ hollow:s=>({id:'hollow',name:'Hollow',sets:s,reps:'20–40 сек',rest:'30–45 сек',how:'Поясница прижата к полу, лопатки оторваны, руки и ноги вытянуты.'}),
+ plank:s=>({id:'plank',name:'Планка',sets:s,reps:'40–60 сек',rest:'30–45 сек',how:'Локти под плечами, таз не провисает, пресс и ягодицы напряжены.'}),
+ knees:()=>({id:'knees',name:'Колени к груди',sets:3,reps:'12–15',rest:'30–45 сек',how:'Медленно, без рывка, поясница не отрывается.'}),
+ side:s=>({id:'side',name:'Боковая планка',sets:s,reps:'20–30 сек на сторону',rest:'30–45 сек',how:'Тело в линию, таз не опускать. Обе стороны.'}),
+ deadbug:()=>({id:'deadbug',name:'Dead bug',sets:3,reps:'10–12 на сторону',rest:'30–45 сек',how:'Поясница прижата, рука и противоположная нога уходят медленно.'}),
+};
+const FOREBLOCK=(opt,note)=>({id:'fore',title:'Предплечья',sub:'10–15 мин',optional:opt,note:note||'Не ставить прямо перед БЖЖ.',ex:FORE});
+const WEEK={
+ 1:{title:'Тяга, бицепс, кор',focus:'Сначала тяга и бицепс',noun:'тягу',blocks:[
+   {id:'main',title:'Тяга и бицепс',ex:[
+     {id:'pull',name:'Подтягивания или австралийские',sets:4,reps:'по максимуму',rest:'2–3 мин',how:'Полная амплитуда, без раскачки. Не тянешь — австралийские.'},
+     {id:'krow',name:'Тяга гири в наклоне',sets:4,reps:'8–12',rest:'90 сек',how:'Спина ровная, тянуть локоть к поясу.'},
+     {id:'rc',name:'Reverse curls',sets:4,reps:'10–15',rest:'60–75 сек',how:'Хват сверху, локти у корпуса.'},
+     {id:'bic',name:'Сгибания на бицепс',sets:4,reps:'8–12',rest:'75–90 сек',how:'Локти не уводить вперёд, вниз медленно.'}]},
+   {id:'core',title:'Кор',ex:[X.hollow(4),X.plank(3),X.knees(),X.side(3)]},
+   {id:'fore',title:'Предплечья',sub:'10–15 мин',note:'Reverse curls уже есть в основной части — здесь без них.',ex:[FORE[0],FORE[2]]}]},
+ 2:{title:'Днём предплечья и короткий кор, вечером БЖЖ 1,5 часа',focus:'Днём предплечья и кор, вечером БЖЖ',noun:'предплечья и кор',bjj:true,blocks:[
+   FOREBLOCK(false,'Днём. Не ставить прямо перед БЖЖ.'),
+   {id:'core',title:'Короткий кор',sub:'по 2 подхода',ex:[X.plank(2),X.hollow(2),X.side(2)]}]},
+ 3:{title:'Пуш и стойка',focus:'Сначала пуш',noun:'пуш',blocks:[
+   {id:'main',title:'Пуш',ex:[
+     {id:'dips',name:'Брусья',sets:4,reps:'по максимуму',rest:'2–3 мин',how:'Плечи вниз, опускаться до 90° в локтях.'},
+     {id:'pike',name:'Pike push-ups',sets:4,reps:'6–12',rest:'90 сек',how:'Таз высоко, голова уходит вперёд-вниз, локти не разводить.'},
+     {id:'lean',name:'Planche lean',sets:5,reps:'15–30 сек',rest:'60 сек',how:'Прямые руки, плечи уходят вперёд за кисти.'},
+     {id:'pseudo',name:'Pseudo planche push-ups',sets:3,reps:'5–10',rest:'90 сек',how:'Кисти у пояса, наклон вперёд держать весь подход.'},
+     {id:'press',name:'Строгий жим гири без прыжка',sets:4,reps:'6–12 на руку',rest:'90–120 сек',how:'Без помощи ног, корпус не отклонять.'},
+     {id:'close',name:'Отжимания узким хватом',sets:3,reps:'по максимуму',rest:'60–75 сек',how:'Локти вдоль корпуса, тело в линию.'}]},
+   {id:'hs',title:'Стойка у стены',pikeOnly:true,ex:[{id:'hs',name:'Стойка у стены',sets:5,reps:'20–60 сек',rest:'60 сек',how:'Руки прямые, тело в линию, взгляд между кистей.'}]},
+   FOREBLOCK(false)]},
+ 4:{title:'Предплечья по самочувствию, вечером БЖЖ 1,5 часа',focus:'Вечером БЖЖ, предплечья по самочувствию',bjj:true,blocks:[
+   FOREBLOCK(true,'По самочувствию. Не прямо перед БЖЖ.')]},
+ 5:{title:'Ноги и кор',focus:'Сначала ноги и кор',noun:'ноги и кор',blocks:[
+   {id:'main',title:'Ноги',ex:[
+     {id:'goblet',name:'Гоблет-присед',sets:4,reps:'10–15',rest:'90–120 сек',how:'Гиря у груди, колени по носкам, спина ровная.'},
+     {id:'lunge',name:'Выпады с гирей',sets:3,reps:'8–10 на ногу',rest:'90 сек',how:'Шаг длинный, заднее колено почти до пола.'},
+     {id:'calf',name:'Подъёмы на носки',sets:4,reps:'15–20',rest:'45–60 сек',how:'Пауза наверху, внизу полная растяжка.'}]},
+   {id:'core',title:'Кор',ex:[X.hollow(4),X.plank(3),X.knees(),X.side(3),X.deadbug()]},
+   FOREBLOCK(false)]},
+ 6:{title:'Вечером только БЖЖ',focus:'Вечером БЖЖ, силовой нет',bjj:true,blocks:[]},
+ 0:{title:'Отдых, ходьба, предплечья можно',focus:'Отдых, силовой нет',rest:true,blocks:[FOREBLOCK(true,'Можно. Силовой сегодня нет.')]},
+};
+function blocksFor(dow){return WEEK[dow].blocks.filter(b=>!b.pikeOnly||S.pikeEasy)}
+function trainStat(k){
+ const dow=parseKey(k).getDay(),W=WEEK[dow],D=day(k,false);
+ let reqSets=0,doneSets=0,reqEx=0,doneEx=0,optSets=0,optDone=0,next=null;
+ for(const b of blocksFor(dow))for(const e of b.ex){
+  const arr=D.sets[b.id+'.'+e.id]||[];const dn=arr.filter(Boolean).length;
+  if(b.optional){optSets+=e.sets;optDone+=Math.min(dn,e.sets);continue}
+  reqSets+=e.sets;doneSets+=Math.min(dn,e.sets);reqEx++;if(dn>=e.sets)doneEx++;
+  else if(!next)next={b,e,dn};
+ }
+ const comps=[];if(reqSets)comps.push(doneSets/reqSets);if(W.bjj)comps.push(D.bjj?1:0);comps.push(D.steps?1:0);
+ const score=comps.reduce((a,b)=>a+b,0)/comps.length;
+ const trainingDone=(reqSets||W.bjj)?((reqSets?doneSets>=reqSets:true)&&(W.bjj?D.bjj:true)):false;
+ return{dow,W,D,reqSets,doneSets,reqEx,doneEx,optSets,optDone,next,score,trainingDone};
+}
+function foodScore(t){const T=S.targets;
+ const kc=t.kcal<=T.kcal[2]?Math.min(t.kcal/T.kcal[1],1):Math.max(0,1-(t.kcal-T.kcal[2])/500);
+ return (kc+Math.min(t.p/T.p[1],1))/2}
+function dayScore(k){return (foodScore(totals(k))+trainStat(k).score)/2}
+function streak(){
+ let n=0,d=now();if(dayScore(today())>0.7)n++;
+ d=addDays(d,-1);
+ for(let i=0;i<730;i++){const k=dkey(d);if(!S.days[k]||dayScore(k)<=0.7)break;n++;d=addDays(d,-1)}
+ return n}
+/* ========== ПЛАН ЕДЫ ========== */
+function planState(k){
+ const D=day(k,false);
+ return S.plan.map(it=>{
+  const p=prod(it.pid),alt=it.alt?prod(it.alt):null;
+  let eaten=0,usedAlt=false;
+  for(const e of D.food){if(e.pid===it.pid)eaten+=e.amount;if(alt&&e.pid===it.alt){usedAlt=true;eaten+=e.amount}}
+  const target=usedAlt?it.altAmount:it.amount;
+  const left=Math.max(0,target-eaten);
+  return{it,p,alt,usedAlt,eaten,target,left,done:left<=(p.unit==='шт'?0:5)};
+ })}
+function planTotals(){const t={kcal:0,p:0,f:0,c:0};for(const it of S.plan){const m=macroOf(prod(it.pid),it.amount);for(const x in t)t[x]+=m[x]}return t}
+function mealGuess(){const h=now().getHours();if(h<11)return 'Завтрак';if(h<16)return 'Обед';if(h<22)return 'Ужин';return 'Другое'}
+const SHORT={buck:'гречка',duck:'утка',tom:'помидоры',cuc:'огурцы',banana:'банан',apple:'яблоко'};
+function nextMealText(k){
+ const h=now().getHours(),ps=planState(k),R=remain(totals(k));
+ const left=ps.filter(x=>!x.done);
+ if(R.kcal<=0)return 'Дальше: ничего, калории закрыты. Голодно — огурцы и помидоры.';
+ if(!left.length){const g=Math.round(Math.max(0,R.p)/0.22/10)*10;return R.p>10?`Дальше: план съеден, белка не хватает — утка ${g} г.`:'Дальше: план съеден. Остаток — овощи.'}
+ // какие основные приёмы ещё впереди: не прошли по времени и ещё не записаны
+ const MAIN=['Завтрак','Обед','Ужин'],logged=new Set(day(k,false).food.map(e=>e.meal));
+ const cur=h<11?0:h<16?1:2;
+ let ahead=MAIN.filter((m,i)=>i>=cur&&!logged.has(m));
+ if(!ahead.length)ahead=['Ужин'];
+ const mealsLeft=ahead.length,late=h>=21;
+ const nm=late?'поздно — только белок':ahead[0].toLowerCase();
+ const parts=[];
+ if(late){
+  const eg=ps.find(x=>x.it.pid==='egg'&&!x.done),du=ps.find(x=>x.it.pid==='duck'&&!x.done);
+  let pr=Math.max(0,R.p);
+  if(eg){parts.push(`яйца ${eg.left}`);pr-=eg.left*7}
+  if(du&&pr>0)parts.push(`утка ${Math.min(du.left,Math.ceil(pr/0.22/10)*10)} г`);
+  if(!parts.length)parts.push('огурцы и помидоры');
+ } else for(const x of left){
+  if(x.it.alt){if(mealsLeft<=2)parts.push('банан или яблоко');continue}
+  let a=x.left/mealsLeft;
+  if(x.p.unit==='шт')parts.push(`яйца ${Math.max(1,Math.round(a))}`);
+  else{a=Math.max(10,Math.round(a/10)*10);parts.push(`${SHORT[x.p.id]||x.p.name.toLowerCase()} ${a} г${x.p.id==='buck'?' сухой':''}`)}
+ }
+ return `Дальше (${nm}): ${parts.slice(0,5).join(', ')}.`;
+}
+
+/* ========== ИИ-ПОМОЩНИКИ: локально, читают данные своей вкладки ========== */
+function aiGen(){
+ const k=today(),ts=trainStat(k),t=totals(k),R=remain(t),T=S.targets,h=now().getHours(),D=day(k,false);
+ const L=[];
+ let tr;
+ if(ts.W.rest)tr=D.steps?'Отдых, силовой нет. Шаги закрыты.':'Отдых, силовой нет. Главное — ходьба.';
+ else if(ts.trainingDone)tr='Тренировка закрыта.';
+ else if(ts.reqSets&&ts.doneSets>0)tr=`Доделай ${ts.W.noun||'тренировку'}: осталось ${ts.reqEx-ts.doneEx} ${pl(ts.reqEx-ts.doneEx,'упражнение','упражнения','упражнений')}.`;
+ else tr=ts.W.focus+'.';
+ L.push(`<b>${DOW[ts.dow]}.</b> ${tr}`);
+ if(t.kcal>T.kcal[2])L.push(`Калории выше коридора: ${r0(t.kcal)} из ${T.kcal[2]}. Больше не ешь, только овощи.`);
+ else if(t.kcal===0)L.push(`Еды пока 0. Белка осталось ${T.p[0]} г, ккал ${T.kcal[0]}.`);
+ else{let s=`Белка осталось ${Math.max(0,r0(R.p))} г, ккал ${Math.max(0,r0(R.kcal))}.`;
+  const ps=planState(k),du=ps.find(x=>x.it.pid==='duck'),eg=ps.find(x=>x.it.pid==='egg');
+  if(R.p>15){const w=[];if(du&&!du.done)w.push('утку');if(eg&&!eg.done)w.push('яйца');if(w.length)s+=` На ${h<11?'обед':'ужин'} оставь ${w.join(' и ')}.`}
+  L.push(s)}
+ const hasW=S.weights.some(w=>w.date===k);
+ if(!hasW&&h<12)L.push('Взвесься: после туалета, до еды. Вечерний вес не пишем.');
+ else if(!D.creatine||D.water<2500){const w=[];if(!D.creatine)w.push('креатин 5 г');if(D.water<2500)w.push(`вода ${fmt(D.water/1000,2)} из 2,5 л`);const s=w.join(', ');L.push(s.charAt(0).toUpperCase()+s.slice(1)+'.')}
+ if(!D.steps)L.push(h<17?'Шаги 8000–10000 добери вечером.':'Шаги 8000–10000 не отмечены — пройдись.');
+ else if(ts.W.bjj&&!D.bjj)L.push('Вечером БЖЖ 1,5 часа.');
+ return L.slice(0,4);
+}
+function aiFood(){
+ const k=today(),t=totals(k),R=remain(t),T=S.targets,h=now().getHours();
+ const L=[];
+ L.push(`Съедено: <b>${r0(t.kcal)}</b> ккал · Б ${r0(t.p)} · Ж ${r0(t.f)} · У ${r0(t.c)}`);
+ L.push(`Осталось: <b>${r0(R.kcal)}</b> ккал · Б ${r0(R.p)} · Ж ${r0(R.f)} · У ${r0(R.c)}`);
+ L.push(nextMealText(k));
+ const exp=T.p[0]*Math.min(1,Math.max(0,(h-8)/13));
+ if(t.kcal>T.kcal[2])L.push({c:'bad',t:`Калории выше коридора: ${r0(t.kcal)} > ${T.kcal[2]}. Сегодня больше не ешь.`});
+ else if(t.p<exp-40)L.push({c:'warn',t:`Белка мало: ${r0(t.p)} из ${T.p[0]} г. Закрой уткой и яйцами.`});
+ else if(t.f>T.f[2])L.push({c:'warn',t:`Жир ${r0(t.f)} г — выше коридора ${T.f[2]}. Масло не добавлять.`});
+ else if(t.kcal>=T.kcal[1]&&t.p>=T.p[1])L.push('День в коридоре. Еда закрыта.');
+ return L.slice(0,4);
+}
+function aiTrain(){
+ const k=today(),ts=trainStat(k),D=ts.D,W=ts.W,dn=DOW[ts.dow];
+ const L=[];
+ if(W.rest){
+  L.push(`<b>${dn}</b> — отдых. Силовой нет.`);
+  L.push(D.steps?'Шаги закрыты.':'Шаги 8000–10000: ещё не отмечены.');
+  const lo=ts.optSets-ts.optDone;
+  L.push(lo<=0?'Предплечья сделаны.':`Предплечья можно: 3 упражнения, ${lo} ${pl(lo,'подход','подхода','подходов')}, 10–15 мин.`);
+  return L}
+ L.push(`<b>${dn}</b> — ${W.title.charAt(0).toLowerCase()+W.title.slice(1)}.`);
+ if(ts.reqSets){const le=ts.reqEx-ts.doneEx,ls=ts.reqSets-ts.doneSets;
+  if(le>0){L.push(`Осталось ${le} ${pl(le,'упражнение','упражнения','упражнений')} из ${ts.reqEx}, ${ls} ${pl(ls,'подход','подхода','подходов')}.`);
+   const n=ts.next;L.push(`Сейчас: ${n.e.name}, подход ${n.dn+1} из ${n.e.sets}, ${n.e.reps}, отдых ${n.e.rest}.`)}
+  else L.push('Силовая часть сделана.');}
+ if(W.bjj){
+  if(ts.dow===6)L.push('Силовую и предплечья сегодня не делать — только БЖЖ.');
+  else if(ts.dow===4)L.push('Предплечья только если свежий и не прямо перед БЖЖ.');
+  else if(L.length<4)L.push('Предплечья днём, не прямо перед БЖЖ.');
+  if(!D.bjj&&L.length<4)L.push('Вечером отметь «БЖЖ 1,5 часа».');
+ }
+ if(!D.steps&&L.length<4)L.push('Шаги 8000–10000 не отмечены.');
+ return L.slice(0,4);
+}
+function aiCard(lines,label){
+ return `<div class="ai"><div class="lbl">ИИ · ${label}<span>${hhmm()}</span></div>${lines.map(l=>typeof l==='string'?`<div class="l">${l}</div>`:`<div class="l ${l.c}">${esc(l.t)}</div>`).join('')}</div>`}
+/* ========== РЕНДЕР ========== */
+let TAB=localStorage.getItem('baza.tab')||'gen';
+let trainView=null;
+function header(lines,label){const d=now();
+ return `<div class="hdr" id="hdr"><div class="top"><div class="brand">БАЗА<small>${DOWS[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}</small></div><button class="gear" data-a="settings" aria-label="Настройки">⚙︎</button></div>${aiCard(lines,label)}</div>`}
+function render(){
+ const app=$('#app');
+ if(TAB==='gen')app.innerHTML=header(aiGen(),'что важнее сегодня')+renderGen();
+ else if(TAB==='food')app.innerHTML=header(aiFood(),'еда')+renderFood();
+ else app.innerHTML=header(aiTrain(),'тренировка сегодня')+renderTrain();
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===TAB));
+ $('#fab').classList.toggle('hidden',TAB!=='food');
+ onScroll();
+}
+function macBar(key,label,eaten){
+ const T=S.targets[key],tg=T[0],mx=T[2]*1.15,col={kcal:'var(--k)',p:'var(--p)',f:'var(--f)',c:'var(--c)'}[key];
+ const pct=Math.min(100,eaten/mx*100),lo=T[1]/mx*100,hi=T[2]/mx*100,left=tg-eaten,over=eaten>T[2];
+ return `<div class="mac"><div class="t"><span style="color:${col}">${label}</span><span>${T[1]}–${T[2]}</span></div>
+ <div class="bar"><i style="width:${pct}%;background:${over?'var(--bad)':col}"></i><div class="cor" style="left:${lo}%;width:${hi-lo}%"></div></div>
+ <div class="n">${r0(eaten)} <em>/ ${tg} /</em> ${left>=0?'ост. '+r0(left):'<span style="color:var(--bad)">+'+r0(-left)+'</span>'}</div></div>`}
+
+function renderGen(){
+ const k=today(),t=totals(k),R=remain(t),T=S.targets,ts=trainStat(k),D=day(k,false);
+ const fs=foodScore(t),sc=(fs+ts.score)/2,st=streak();
+ const w=S.weights.find(x=>x.date===k);
+ let trTxt,trPill;
+ if(ts.W.rest){trTxt='Отдых · силовой нет · предплечья можно';trPill=D.steps?'<span class="pill ok">шаги ✓</span>':'<span class="pill no">шаги —</span>'}
+ else{trTxt=ts.W.title;trPill=ts.trainingDone?'<span class="pill ok">сделана ✓</span>':`<span class="pill no">не сделана${ts.reqSets?' · '+ts.doneSets+'/'+ts.reqSets:''}</span>`}
+ return `<div class="wrap">
+ <div class="card" style="margin-top:2px"><h3>Сегодня<span class="mut" style="letter-spacing:0;text-transform:none;font-size:15px">закрыто ${r0(sc*100)}%</span></h3>
+  <div class="row xs mut" style="justify-content:space-between;margin-bottom:5px"><span>Еда</span><span>${r0(fs*100)}%</span></div>
+  <div class="bar"><i style="width:${fs*100}%;background:var(--k)"></i></div>
+  <div class="row xs mut" style="justify-content:space-between;margin:10px 0 5px"><span>Тренировка</span><span>${r0(ts.score*100)}%</span></div>
+  <div class="bar"><i style="width:${ts.score*100}%;background:var(--acc)"></i></div>
+  <div class="grid2" style="margin-top:14px">
+   <div class="stat"><div class="k">Ккал</div><div class="v">${r0(t.kcal)}<small> / ${T.kcal[0]}</small></div><div class="sm mut">осталось ${r0(R.kcal)}</div></div>
+   <div class="stat"><div class="k">Белок</div><div class="v">${r0(t.p)}<small> / ${T.p[0]} г</small></div><div class="sm mut">осталось ${r0(R.p)} г</div></div>
+  </div>
+  <button class="chk" data-a="goTrain" style="margin-top:6px"><div class="tx"><div style="font-weight:700">Тренировка · ${DOW[ts.dow].toLowerCase()}</div><small>${esc(trTxt)}</small></div>${trPill}</button>
+  <div class="grid2" style="margin-top:2px">
+   <div class="stat"><div class="k">Вес утра</div><div class="v">${w?fmt(w.kg,1)+'<small> кг</small>':'<small style="font-size:17px;color:var(--text)">не записан</small>'}</div><div class="sm mut">${w?(w.waist?'талия '+fmt(w.waist,1)+' см':'талия не указана'):'ориентир ≈'+S.profile.morningRef+' кг'}</div></div>
+   <div class="stat"><div class="k">Серия &gt;70%</div><div class="v">${st}<small> ${pl(st,'день','дня','дней')}</small></div><div class="sm mut">сегодня ${r0(sc*100)}%</div></div>
+  </div>
+ </div>
+ <div class="card"><h3>Курс<button class="act" data-a="editLines">Изменить</button></h3><div class="lines">
+  ${['Зачем','Что уже есть','Что делать каждый день','Что не бросать'].map((x,i)=>`<div class="ln"><div class="num">${i+1}</div><div><div class="k">${x}</div><div>${esc(S.lines[i])}</div></div></div>`).join('')}
+ </div></div>
+ <div class="card"><h3>Вес утра · 8 недель</h3>
+  <button class="btn pri full" data-a="weight">${w?'Изменить утренний вес':'Записать утренний вес'}</button>
+  <div class="xs mut" style="margin-top:8px">Только утром, после туалета, до еды. Вечерний вес не пишем. Талия — по желанию.</div>
+  ${weightChart()}
+  <div class="rule">Норма: минус 0,2–0,4 кг в неделю, если повторения в зале не падают.</div>
+ </div>
+ <div class="card"><h3>Профиль</h3>
+  <div class="sm" style="line-height:1.55">${S.profile.age} лет · ${S.profile.height} см · утро ≈${S.profile.morningRef} кг<br>
+  <span class="mut">Цель:</span> убирать жир и растить мышцы — руки и предплечья, сила к отжиманиям у стены, рельефный пресс.<br>
+  <span class="mut">Каждый день:</span> креатин 5 г.<br>
+  <span class="mut">Не есть:</span> хлеб, сахар, соки, газировку, печенье.<br>
+  <span class="mut">Утка:</span> всегда без кожи и видимого жира. Маслом жир не добирать.</div>
+ </div>
+ </div>`}
+
+function weightChart(){
+ const end=now(),start=addDays(end,-55),sk=dkey(start);
+ const pts=S.weights.filter(w=>w.date>=sk).sort((a,b)=>a.date<b.date?-1:1);
+ const W=362,H=170,pL=34,pR=8,pT=12,pB=24,ref=S.profile.morningRef;
+ const vals=pts.map(p=>p.kg);
+ const mn=Math.floor(Math.min(ref,...vals)-1),mx=Math.ceil(Math.max(ref,...vals)+1);
+ const x=d=>pL+(parseKey(d)-parseKey(sk))/(864e5*55)*(W-pL-pR);
+ const y=v=>pT+(mx-v)/(mx-mn)*(H-pT-pB);
+ let g='';
+ const step=(mx-mn)>6?2:1;
+ for(let v=mn;v<=mx;v+=step)g+=`<line x1="${pL}" x2="${W-pR}" y1="${y(v)}" y2="${y(v)}" stroke="#262a31"/><text x="${pL-6}" y="${y(v)+4}" fill="#5c616a" font-size="11" text-anchor="end">${v}</text>`;
+ for(let i=0;i<8;i+=2){const d=addDays(start,i*7);g+=`<text x="${x(dkey(d))}" y="${H-6}" fill="#5c616a" font-size="10.5">${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}</text>`}
+ g+=`<line x1="${pL}" x2="${W-pR}" y1="${y(ref)}" y2="${y(ref)}" stroke="#c6ff3d" stroke-opacity=".4" stroke-dasharray="4 5"/><text x="${W-pR}" y="${y(ref)-6}" fill="#c6ff3d" fill-opacity=".7" font-size="11" text-anchor="end">ориентир ${ref}</text>`;
+ if(pts.length>1)g+=`<polyline fill="none" stroke="#4fd1ff" stroke-width="2.5" stroke-linejoin="round" points="${pts.map(p=>x(p.date)+','+y(p.kg)).join(' ')}"/>`;
+ g+=pts.map(p=>`<circle cx="${x(p.date)}" cy="${y(p.kg)}" r="4" fill="#4fd1ff"/>`).join('');
+ let pace;
+ if(pts.length>=2){const a=pts[0],b=pts[pts.length-1];const wk=(parseKey(b.date)-parseKey(a.date))/(864e5*7);
+  if(wk>=1){const r=(b.kg-a.kg)/wk;pace=`<div class="sm" style="margin-top:6px">Темп: <b style="color:${r<=-0.2&&r>=-0.4?'var(--ok)':'var(--warn)'}">${r>0?'+':''}${fmt(r,2)} кг/нед</b> · ${pts.length} ${pl(pts.length,'запись','записи','записей')}</div>`}
+  else pace=`<div class="sm mut" style="margin-top:6px">${pts.length} ${pl(pts.length,'запись','записи','записей')}. Темп будет виден через неделю.</div>`}
+ else pace=`<div class="sm mut" style="margin-top:6px">${pts.length?'1 запись: '+fmt(pts[0].kg,1)+' кг. ':'Записей пока нет. '}Пунктир — ориентир из профиля (утро ≈${ref} кг).</div>`;
+ return `<svg class="chart" viewBox="0 0 ${W} ${H}">${g}</svg>${pace}`}
+
+function renderFood(){
+ const k=today(),t=totals(k),D=day(k,false),ps=planState(k),pt=planTotals();
+ const meals=['Завтрак','Обед','Ужин','Другое'];
+ const byMeal=meals.map(m=>[m,D.food.filter(e=>e.meal===m)]).filter(x=>x[1].length);
+ return `<div class="wrap">
+ <div class="grid2" style="margin-top:2px">${macBar('kcal','Ккал',t.kcal)}${macBar('p','Белки',t.p)}${macBar('f','Жиры',t.f)}${macBar('c','Углеводы',t.c)}</div>
+ <div class="xs mut" style="margin:8px 2px 0">съедено / цель / осталось · рамка — коридор. Жир не поднимать до 80 г и не резать до 40 г. Нет сил — добавить гречку, а не масло и не убирать желтки.</div>
+ <div class="card"><h3>Сегодня съел<span style="letter-spacing:0;text-transform:none;font-size:15px" class="mut">${D.food.length} ${pl(D.food.length,'запись','записи','записей')}</span></h3>
+  ${byMeal.length?byMeal.map(([m,arr])=>`<div class="meal-h">${m} · ${r0(arr.reduce((a,e)=>a+e.kcal,0))} ккал</div>`+arr.map(e=>`<button class="food" data-a="editEntry" data-id="${e.id}">${e.photo?`<img src="${e.photo}" alt="">`:''}<div class="sp"><div class="nm">${esc(e.name)}</div><div class="m">${fmt(e.amount,e.unit==='шт'?1:0)} ${e.unit} · Б ${fmt(e.p,1)} · Ж ${fmt(e.f,1)} · У ${fmt(e.c,1)}</div></div><div class="kc">${r0(e.kcal)}</div></button>`).join('')).join('')
+  :`<div class="mut sm">Пока ничего. Жми «съел» в плане ниже или «+ Еда». Сам план в дневник не пишется.</div>`}
+ </div>
+ <div class="card"><h3>План на день<button class="act" data-a="editPlan">Граммы</button></h3>
+  ${ps.map((x,i)=>{const p=x.usedAlt?x.alt:x.p,amt=x.usedAlt?x.it.altAmount:x.it.amount,m=macroOf(p,amt);
+   const label=x.it.alt?(x.usedAlt?'Яблоко':'Банан или яблоко'):p.name;
+   const amtT=x.it.alt?(x.usedAlt?`1 шт ≈${amt} г`:'1 шт'):`${amt} ${p.unit==='шт'?'шт':'г'}`;
+   const sub=x.it.alt&&!x.usedAlt?`банан ≈${x.it.amount} г · ${r0(m.kcal)} ккал / яблоко ≈${x.it.altAmount} г · ${r0(macroOf(x.alt,x.it.altAmount).kcal)} ккал`:`${r0(m.kcal)} ккал · Б ${fmt(m.p,1)}${x.it.hint?' · '+esc(x.it.hint):''}`;
+   const prog=x.eaten&&!x.done?` · <span style="color:var(--warn)">съел ${fmt(x.eaten,0)}, ост. ${fmt(x.left,0)}</span>`:'';
+   const btn=x.done?`<button class="eat done" data-a="planInfo">✓ съел</button>`
+    :(x.it.alt&&!x.usedAlt&&!x.eaten)?`<div class="row" style="gap:6px"><button class="eat" style="min-width:56px" data-a="eatPlan" data-i="${i}" data-alt="0" aria-label="банан">🍌</button><button class="eat" style="min-width:56px" data-a="eatPlan" data-i="${i}" data-alt="1" aria-label="яблоко">🍏</button></div>`
+    :`<button class="eat" data-a="eatPlan" data-i="${i}">съел</button>`;
+   return `<div class="plan"><div class="sp"><div class="nm">${esc(label)} · ${amtT}</div><div class="m">${sub}${prog}</div></div>${btn}</div>`}).join('')}
+  <div class="xs mut" style="margin-top:8px">План целиком: ${r0(pt.kcal)} ккал · Б ${r0(pt.p)} · Ж ${r0(pt.f)} · У ${r0(pt.c)}. «Съел» пишет остаток позиции, запись можно поправить.</div>
+  <div class="rule">Две-три недели вес и талия стоят — убрать 40 г гречки. Нет сил и повторения падают — добавить 40 г гречки. Жир из-за этого не менять.</div>
+ </div>
+ <div class="card"><h3>Вода и креатин</h3>
+  <div class="row"><div class="sp" style="font-weight:800;font-size:22px">${fmt(D.water/1000,2)} л <span class="mut sm" style="font-weight:600">из 2,5–3 л</span></div>${D.water>=2500?'<span class="pill ok">вода ✓</span>':''}</div>
+  <div class="water">${Array.from({length:12},(_,i)=>`<i class="${i<D.water/250?'on':''}${i>=10?' ok':''}"></i>`).join('')}</div>
+  <div class="row" style="margin-top:8px"><button class="btn" style="width:76px" data-a="water" data-v="-250" aria-label="минус 250 мл">−</button><button class="btn pri sp" data-a="water" data-v="250">+250 мл</button></div>
+  <button class="chk ${D.creatine?'on':''}" data-a="creatine" style="margin-top:6px"><div class="box">${D.creatine?'✓':''}</div><div class="tx"><div style="font-weight:700">Креатин 5 г</div><small>каждый день</small></div></button>
+ </div>
+ <div class="card"><h3>Мои продукты<button class="act" data-a="products">Открыть</button></h3><div class="sm mut">${S.products.length} ${pl(S.products.length,'продукт','продукта','продуктов')}: ${esc(S.products.slice(0,7).map(p=>p.name.toLowerCase()).join(', '))}${S.products.length>7?'…':''}</div></div>
+ <div style="height:72px"></div>
+ </div>`}
+
+function renderTrain(){
+ const tk=today(),tdow=now().getDay(),dow=trainView==null?tdow:trainView,isToday=dow===tdow;
+ const W=WEEK[dow],D=isToday?day(tk,false):EMPTY(),dis=isToday?'':'disabled';
+ const order=[1,2,3,4,5,6,0],short={1:'тяга',2:'пр+БЖЖ',3:'пуш',4:'БЖЖ',5:'ноги',6:'БЖЖ',0:'отдых'};
+ let h=`<div class="wrap"><div class="days">${order.map(d=>`<button class="dchip ${d===dow?'sel':''} ${d===tdow?'today':''}" data-a="tday" data-d="${d}">${DOWS[d]}<small>${short[d]}</small></button>`).join('')}</div>`;
+ h+=`<div class="card" style="margin-top:10px"><div class="mut sm" style="font-weight:700">${DOW[dow]}${isToday?' · сегодня':''}</div><div style="font-weight:800;font-size:21px;margin-top:2px">${esc(W.title)}</div>
+  ${!isToday?'<div class="xs mut" style="margin-top:6px">Просмотр. Галочки ставятся только в сегодняшний день.</div>':''}
+  <button class="chk ${D.steps?'on':''}" data-a="steps" ${dis} style="margin-top:6px"><div class="box">${D.steps?'✓':''}</div><div class="tx"><div style="font-weight:700">Шаги 8000–10000</div><small>каждый день</small></div></button>
+  ${W.bjj?`<button class="chk ${D.bjj?'on':''}" data-a="bjj" ${dis}><div class="box">${D.bjj?'✓':''}</div><div class="tx"><div style="font-weight:700">БЖЖ 1,5 часа</div><small>вечером</small></div></button>`:''}
+  ${W.rest?'<div class="rule">Отдых, ходьба. Силовой нет. Предплечья — можно.</div>':''}
+  ${dow===6?'<div class="rule">Только БЖЖ вечером. Силовую и предплечья не делать.</div>':''}
+ </div>`;
+ for(const b of blocksFor(dow)){
+  h+=`<div class="card"><h3><span>${esc(b.title)}${b.sub?' · '+b.sub:''}</span>${b.optional?'<span class="tag opt">по желанию</span>':''}</h3>${b.note?`<div class="xs mut" style="margin:-4px 0 8px">${esc(b.note)}</div>`:''}`;
+  for(const e of b.ex){const arr=D.sets[b.id+'.'+e.id]||[];const dn=arr.filter(Boolean).length;
+   h+=`<div class="ex ${dn>=e.sets?'done':''}"><div class="nm">${esc(e.name)}</div><div class="meta"><span class="pill">${e.sets} × ${esc(e.reps)}</span><span class="pill">отдых ${esc(e.rest)}</span></div><div class="how">${esc(e.how)}</div>
+   <div class="sets">${Array.from({length:e.sets},(_,i)=>`<button class="set ${arr[i]?'on':''}" data-a="set" data-b="${b.id}" data-e="${e.id}" data-i="${i}" data-rest="${esc(e.rest)}" ${dis} aria-label="подход ${i+1}">${arr[i]?'✓':i+1}</button>`).join('')}</div></div>`}
+  h+='</div>';
+ }
+ if(dow===3)h+=`<div class="card"><button class="chk ${S.pikeEasy?'on':''}" data-a="pikeEasy"><div class="box">${S.pikeEasy?'✓':''}</div><div class="tx"><div style="font-weight:700">Pike уже легко</div><small>показать стойку у стены 5×20–60 сек</small></div></button></div>`;
+ h+=`<div class="card"><h3>Неделя</h3><div class="sm" style="line-height:1.6">${order.map(d=>`<div class="row" style="align-items:flex-start"><b style="width:30px;flex:none;color:${d===tdow?'var(--acc)':'inherit'}">${DOWS[d]}</b><span class="${d===tdow?'':'mut'}">${esc(WEEK[d].title)}</span></div>`).join('')}</div>
+ <div class="rule">Верх повторений сделан чисто — в следующий раз усложнить или добавить вес.</div>
+ <div class="xs mut" style="margin-top:8px">Предплечья 10–15 мин: пн, вт, ср, пт, вс. В четверг необязательно. Не ставить прямо перед БЖЖ.</div></div>`;
+ return h+'</div>'}
+/* ========== ЛИСТЫ ========== */
+let SHEET=false;
+function openSheet(html){SHEET=true;$('#sheetBody').innerHTML=html;$('#sheetBg').style.display='block';requestAnimationFrame(()=>$('#sheet').classList.add('open'));$('#sheet').scrollTop=0}
+function closeSheet(){SHEET=false;$('#sheet').classList.remove('open');$('#sheetBg').style.display='none';PH=null}
+const sheetOpen=()=>SHEET;
+let TT;function toast(t,btn,fn){$('#toastT').textContent=t;const b=$('#toastB');b.textContent=btn||'';b.onclick=()=>{fn&&fn();$('#toast').style.display='none'};b.style.display=btn?'':'none';$('#toast').style.display='flex';clearTimeout(TT);TT=setTimeout(()=>$('#toast').style.display='none',3500)}
+const MEALS=['Завтрак','Обед','Ужин','Другое'];
+
+function sheetLines(){openSheet(`<h2>Курс</h2><div class="sm mut">Заполняется один раз, можно менять.</div>
+ ${['Зачем','Что уже есть','Что делать каждый день','Что не бросать'].map((l,i)=>`<div class="fld"><label>${i+1}. ${l}</label><textarea rows="2" id="ln${i}">${esc(S.lines[i])}</textarea></div>`).join('')}
+ <button class="btn pri full" style="margin-top:14px" data-a="saveLines">Сохранить</button>`)}
+
+function sheetWeight(){const k=today(),w=S.weights.find(x=>x.date===k),h=now().getHours();
+ openSheet(`<h2>Утренний вес</h2><div class="sm mut">Только утром, после туалета, до еды. Вечерний вес в статистику не идёт.</div>
+ ${h>=12?`<div class="rule" style="background:#221c0c;border-color:#4b3d17;color:#ffd98a">Сейчас ${hhmm()} — не утро. Вечерний вес не пиши. Записывай, только если взвешивался сегодня утром.</div>`:''}
+ <div class="grid2"><div class="fld"><label>Вес, кг</label><input id="wKg" inputmode="decimal" placeholder="напр. 82,0" value="${w?fmt(w.kg,1):''}"></div>
+ <div class="fld"><label>Талия, см <span class="dim">· необяз.</span></label><input id="wWaist" inputmode="decimal" placeholder="—" value="${w&&w.waist?fmt(w.waist,1):''}"></div></div>
+ ${h>=12?`<button class="chk" id="wMorning" data-a="toggleMorning"><div class="box"></div><div class="tx"><div style="font-weight:700">Это вес сегодняшнего утра</div><small>до еды, после туалета</small></div></button>`:''}
+ <button class="btn pri full" style="margin-top:14px" data-a="saveWeight">Записать</button>
+ ${w?'<button class="btn ghost red full" style="margin-top:8px" data-a="delWeight">Удалить запись за сегодня</button>':''}`)}
+
+/* --- форма еды --- */
+let F=null;
+function sheetFood(init){F=Object.assign({name:'',amount:'',unit:'г',per:null,kcal:'',p:'',f:'',c:'',meal:mealGuess(),photo:null},init||{});drawFood()}
+function drawFood(){
+ const editing=!!F.id,v=(x,d)=>x===''||x==null||isNaN(x)?'':fmt(x,d);
+ openSheet(`<h2>${editing?'Изменить запись':'Добавить еду'}</h2>
+ ${F.photo?`<img class="photo-prev" style="max-height:160px" src="${F.photo}" alt="">`:''}
+ <div class="xs mut" style="margin-bottom:6px">Мои продукты — нажми, КБЖУ подставится:</div>
+ <div class="chips">${S.products.map(p=>`<button data-a="pickProd" data-id="${p.id}" class="${F.pid===p.id?'on':''}">${esc(p.name)}</button>`).join('')}</div>
+ <div class="fld"><label>Название</label><input id="fName" value="${esc(F.name)}" placeholder="что съел" autocomplete="off"></div>
+ <div class="grid2"><div class="fld"><label>${F.unit==='шт'?'Штук':'Граммы'}</label><input id="fAmt" inputmode="decimal" value="${v(F.amount,1)}"></div>
+ <div class="fld"><label style="color:var(--k)">Ккал</label><input id="fK" inputmode="decimal" value="${v(F.kcal,0)}"></div></div>
+ <div class="grid2" style="grid-template-columns:1fr 1fr 1fr"><div class="fld"><label style="color:var(--p)">Белки, г</label><input id="fP" inputmode="decimal" value="${v(F.p,1)}"></div>
+ <div class="fld"><label style="color:var(--f)">Жиры, г</label><input id="fF" inputmode="decimal" value="${v(F.f,1)}"></div>
+ <div class="fld"><label style="color:var(--c)">Углев., г</label><input id="fC" inputmode="decimal" value="${v(F.c,1)}"></div></div>
+ <div class="xs mut" style="margin-top:6px" id="fHint">${F.per?`На ${F.unit==='шт'?'1 шт':'100 г'}: ${fmt(F.per.kcal)} ккал · Б ${fmt(F.per.p,1)} · Ж ${fmt(F.per.f,1)} · У ${fmt(F.per.c,1)}. Меняешь граммы — цифры пересчитываются.`:'Цифры — за всю порцию.'}</div>
+ <div class="fld"><label>Приём</label><div class="seg">${MEALS.map(m=>`<button data-a="meal" data-m="${m}" class="${F.meal===m?'on':''}">${m}</button>`).join('')}</div></div>
+ <div class="row" style="margin-top:12px"><button class="btn sp" data-a="fCam">📷 Камера</button><button class="btn sp" data-a="fGal">🖼 Галерея</button></div>
+ <button class="btn full" style="margin-top:10px" data-a="saveProd">☆ Сохранить в мои продукты</button>
+ <button class="btn pri full" style="margin-top:10px" data-a="saveFood">${editing?'Сохранить':'Записать в день'}</button>
+ ${editing?'<button class="btn ghost red full" style="margin-top:8px" data-a="delFood">Удалить запись</button>':''}`);
+ $('#fAmt').addEventListener('input',()=>{if(!F.per)return;const a=num($('#fAmt').value);if(isNaN(a))return;const m=F.unit==='шт'?a:a/100;
+  $('#fK').value=fmt(F.per.kcal*m,0);$('#fP').value=fmt(F.per.p*m,1);$('#fF').value=fmt(F.per.f*m,1);$('#fC').value=fmt(F.per.c*m,1)});
+ ['#fK','#fP','#fF','#fC'].forEach(s=>$(s).addEventListener('input',()=>{F.per=null;$('#fHint').textContent='Цифры — за всю порцию (введены вручную).'}));
+}
+function readFood(){F.name=$('#fName').value.trim();F.amount=num($('#fAmt').value);F.kcal=num($('#fK').value);F.p=num($('#fP').value)||0;F.f=num($('#fF').value)||0;F.c=num($('#fC').value)||0}
+
+function sheetProducts(){openSheet(`<h2>Мои продукты</h2><div class="sm mut">КБЖУ на 100 г (яйцо — на 1 шт). Цифры можно поправить под себя.</div>
+ ${S.products.map(p=>`<div class="card" style="padding:12px"><div class="row"><div class="sp"><b>${esc(p.name)}</b> <span class="xs mut">${p.note?esc(p.note)+' · ':''}на ${p.unit==='шт'?'1 шт':'100 г'}</span></div>${p.base?'':`<button class="btn ghost red" style="min-height:44px;padding:0 10px" data-a="delProd" data-id="${p.id}" aria-label="удалить">✕</button>`}</div>
+ <div class="grid4" style="margin-top:8px">${['kcal','p','f','c'].map(f=>`<div><label class="xs mut">${{kcal:'ккал',p:'Б',f:'Ж',c:'У'}[f]}</label><input inputmode="decimal" style="min-height:48px;padding:8px" data-pe="${p.id}" data-f="${f}" value="${fmt(p[f],1)}"></div>`).join('')}</div></div>`).join('')}
+ <button class="btn pri full" style="margin-top:14px" data-a="saveProducts">Сохранить</button>`)}
+
+function sheetPlan(){const fr=S.plan.find(x=>x.alt);openSheet(`<h2>План по умолчанию</h2><div class="sm mut">Цель на день. В дневник сам не пишется.</div>
+ ${S.plan.map((it,i)=>{const p=prod(it.pid);return `<div class="fld"><label>${it.alt?'Банан, г (одна штука)':esc(p.name)+(p.unit==='шт'?', шт':', г')}${it.hint?' · '+esc(it.hint):''}</label>
+  <div class="row">${it.pid==='buck'?`<button class="btn" data-a="buck" data-v="-40">−40</button>`:''}<input inputmode="decimal" id="pl${i}" value="${it.amount}">${it.pid==='buck'?`<button class="btn" data-a="buck" data-v="40">+40</button>`:''}</div></div>`}).join('')}
+ <div class="fld"><label>Яблоко, г (одна штука)</label><input inputmode="decimal" id="plAlt" value="${fr?fr.altAmount:150}"></div>
+ <div class="rule">Две-три недели вес и талия стоят — убрать 40 г гречки. Нет сил и повторения падают — добавить 40 г гречки. Жир не менять.</div>
+ <button class="btn pri full" style="margin-top:14px" data-a="savePlan">Сохранить</button>
+ <button class="btn ghost full" style="margin-top:8px" data-a="resetPlan">Вернуть план по умолчанию</button>`)}
+
+function sheetSettings(){const a=S.ai;openSheet(`<h2>Настройки</h2>
+ <div class="card" style="margin-top:0"><h3>ИИ по фото еды</h3>
+ <div class="sm mut">Помощники на вкладках работают сами, прямо на телефоне, без интернета. Распознать еду на фото без нейросети нельзя — для этого нужен свой ключ API. Ключ хранится только на этом телефоне, фото уходит напрямую в выбранный сервис. Без ключа фото просто прикрепляется к записи, цифры вписываешь сам.</div>
+ <div class="fld"><label>Ключ API</label><input id="aiKey" type="password" autocomplete="off" placeholder="xai-…" value="${esc(a.key)}"></div>
+ <div class="fld"><label>Адрес API (OpenAI-совместимый)</label><input id="aiBase" autocomplete="off" autocapitalize="off" value="${esc(a.base)}"></div>
+ <div class="fld"><label>Модель, которая видит фото</label><input id="aiModel" autocomplete="off" autocapitalize="off" value="${esc(a.model)}"></div>
+ <button class="btn pri full" style="margin-top:12px" data-a="saveAI">Сохранить</button></div>
+ <div class="card"><h3>Данные</h3><div class="sm mut">Всё хранится на телефоне: без регистрации и без сервера. Добавь на экран «Домой» (Safari → Поделиться → «На экран Домой») — так iOS не сотрёт данные.</div>
+ <div class="row" style="margin-top:10px"><button class="btn sp" data-a="export">Копия в файл</button><button class="btn sp" data-a="import">Из файла</button></div>
+ <input type="file" id="impIn" accept="application/json,.json" class="hidden">
+ <button class="btn ghost red full" style="margin-top:8px" data-a="wipe">Стереть всё</button></div>`)}
+
+/* --- фото еды --- */
+let PH=null,PHFORM=false;
+function pickPhoto(cam){(cam?$('#camIn'):$('#galIn')).click()}
+function shrink(file,max,q){return new Promise((res,rej)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',q))};img.onerror=rej;img.src=url})}
+async function onPhoto(file,fromForm){
+ if(!file)return;
+ let big,thumb;try{big=await shrink(file,1024,.82);thumb=await shrink(file,200,.7)}catch(e){toast('Не открылось фото');return}
+ if(fromForm&&F){F.photo=thumb;drawFood();return}
+ PH={big,thumb,state:S.ai.key?'loading':'nokey'};
+ drawPhoto();if(S.ai.key)analyze();
+}
+function drawPhoto(){
+ if(!PH)return;const R=remain(totals(today()));let body='';
+ if(PH.state==='nokey')body=`<div class="rule" style="background:#221c0c;border-color:#4b3d17;color:#ffd98a">ИИ по фото не подключён: нет ключа API в настройках ⚙︎. Фото прикреплю к записи, цифры впиши сам.</div>
+  <button class="btn pri full" style="margin-top:12px" data-a="phManual">Вписать цифры</button><div class="grid2" style="margin-top:8px"><button class="btn" data-a="settings">Настройки</button><button class="btn" data-a="phNo">Не добавлять</button></div>`;
+ else if(PH.state==='loading')body=`<div class="row" style="padding:14px 0"><span class="spinner"></span><span>ИИ смотрит фото…</span></div><button class="btn full" data-a="phNo">Не добавлять</button>`;
+ else if(PH.state==='error')body=`<div class="rule" style="background:#2a1212;border-color:#5a2222;color:#ffb0a6">Не получилось распознать: ${esc(PH.err)}. Цифры не выдумываю — впиши вручную.</div>
+  <button class="btn pri full" style="margin-top:12px" data-a="phManual">Вписать цифры</button><div class="grid2" style="margin-top:8px"><button class="btn" data-a="phRetry">Повторить</button><button class="btn" data-a="phNo">Не добавлять</button></div>`;
+ else if(PH.res.unclear)body=`<div class="res"><div class="whatline">Фото неясное</div><div class="sm" style="margin-top:4px">${esc(PH.res.what||'Не видно, что на тарелке.')}</div><div class="note">Точные цифры не ставлю. Сними ближе и при свете или впиши вручную.</div></div>
+   <div class="grid2" style="margin-top:12px"><button class="btn pri" data-a="phManual">Вписать вручную</button><button class="btn" data-a="phRetake">Переснять</button></div><button class="btn full" style="margin-top:8px" data-a="phNo">Не добавлять</button>`;
+ else{const r=PH.res,g=PH.grams,m=g/r.grams,v={kcal:r.kcal*m,p:r.p*m,f:r.f*m,c:r.c*m};
+   const fit=(g===r.grams&&r.fit)?r.fit:`После этого останется ${r0(R.kcal-v.kcal)} ккал и ${r0(R.p-v.p)} г белка.`;
+   body=`<div class="res"><div class="whatline">${esc(r.what)}</div><div class="sm mut" style="margin-top:2px">примерно ${r0(g)} г</div>
+   <div class="grid4" style="margin-top:10px">${[['ккал',v.kcal,0,'k'],['Б',v.p,1,'p'],['Ж',v.f,1,'f'],['У',v.c,1,'c']].map(x=>`<div class="stat" style="padding:8px;text-align:center"><div class="k" style="color:var(--${x[3]})">${x[0]}</div><div style="font-weight:800;font-size:19px">${fmt(x[1],x[2])}</div></div>`).join('')}</div>
+   <div class="rule">${esc(fit)}</div></div>
+   ${PH.editG?`<div class="fld"><label>Граммы</label><div class="row"><input id="phG" inputmode="decimal" value="${r0(g)}"><button class="btn pri" data-a="phSetG">OK</button></div></div>`:''}
+   <div class="fld"><label>Приём</label><div class="seg">${MEALS.map(x=>`<button data-a="phMeal" data-m="${x}" class="${(PH.meal||mealGuess())===x?'on':''}">${x}</button>`).join('')}</div></div>
+   <div class="grid2" style="margin-top:12px;grid-template-columns:1fr 1fr 1fr"><button class="btn pri" style="padding:0 6px" data-a="phAdd">Добавить</button><button class="btn" style="padding:0 6px;font-size:15px;line-height:1.1" data-a="phEditG">Изменить граммы</button><button class="btn" style="padding:0 6px;font-size:15px;line-height:1.1" data-a="phNo">Не добавлять</button></div>`}
+ openSheet(`<h2>Фото еды</h2><img class="photo-prev" src="${PH.big}" alt="">${body}`);
+}
+async function analyze(){
+ const R=remain(totals(today())),a=S.ai,T=S.targets;
+ const sys='Ты считаешь КБЖУ еды по фото. Отвечай ТОЛЬКО одним JSON-объектом без markdown: {"unclear":boolean,"what":string,"grams":number|null,"kcal":number|null,"p":number|null,"f":number|null,"c":number|null,"fit":string}. what — что на фото, по-русски, коротко. grams — примерный вес всей порции, г. kcal,p,f,c — на всю порцию (ккал, белки, жиры, углеводы в граммах). fit — ОДНА строка по-русски: как это садится в остаток дня. Если фото неясное, еду не видно или вес оценить нельзя — unclear=true, все числа null, в what напиши, что именно не видно. Не выдумывай точные цифры, если не уверен. Учти: утка у человека всегда без кожи и видимого жира; хлеб, сахар, соки, газировку и печенье он не ест — если это на фото, скажи прямо в fit.';
+ const ctx=`Остаток дня до цели: ${r0(R.kcal)} ккал, белки ${r0(R.p)} г, жиры ${r0(R.f)} г, углеводы ${r0(R.c)} г. Цель дня: ${T.kcal[0]} ккал, Б ${T.p[0]}, Ж ${T.f[0]}, У ${T.c[0]}.`;
+ try{
+  const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),60000);
+  const resp=await fetch(a.base.replace(/\/+$/,'')+'/chat/completions',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+a.key},
+   body:JSON.stringify({model:a.model,temperature:0.2,messages:[{role:'system',content:sys},{role:'user',content:[{type:'image_url',image_url:{url:PH.big,detail:'high'}},{type:'text',text:ctx}]}]})});
+  clearTimeout(to);
+  if(!resp.ok){let m='';try{const j=await resp.json();m=typeof j.error==='string'?j.error:(j.error?.message||j.message||'')}catch(e){}throw new Error(([400,401,403].includes(resp.status)?'ключ или модель не подошли ('+resp.status+')':'сервис ответил '+resp.status)+(m?': '+String(m).slice(0,100):''))}
+  const j=await resp.json(),txt=j.choices?.[0]?.message?.content||'';
+  const mm=String(txt).match(/\{[\s\S]*\}/);if(!mm)throw new Error('ответ не в формате JSON');
+  const r=JSON.parse(mm[0]);
+  const ok=['grams','kcal','p','f','c'].every(f=>typeof r[f]==='number'&&isFinite(r[f])&&r[f]>=0)&&r.grams>0;
+  if(!PH)return;
+  if(r.unclear||!ok)PH.res={unclear:true,what:r.what};else{PH.res=r;PH.grams=r.grams}
+  PH.state='done';
+ }catch(e){if(!PH)return;PH.state='error';PH.err=e.name==='AbortError'?'нет ответа 60 сек':(/fetch|Load failed|NetworkError/i.test(e.message)?'нет связи или сервис не принимает запросы из браузера':e.message)}
+ if(sheetOpen())drawPhoto();
+}
+/* ========== ДЕЙСТВИЯ ========== */
+function logEntry(e){const D=day(today());const x=Object.assign({id:uid(),t:Date.now()},e);D.food.push(x);save();return x}
+let timerI=null;
+function startTimer(rest,label){const m=rest.match(/(\d+)/);if(!m)return;let s=+m[1];if(/мин/.test(rest))s*=60;
+ const end=Date.now()+s*1000;$('#timer').style.display='flex';$('#timerL').textContent='Отдых · '+label;
+ clearInterval(timerI);const tick=()=>{const l=Math.max(0,Math.round((end-Date.now())/1000));$('#timerT').textContent=Math.floor(l/60)+':'+String(l%60).padStart(2,'0');if(!l){clearInterval(timerI);$('#timerL').textContent='Отдых закончен — следующий подход';setTimeout(()=>$('#timer').style.display='none',4000)}};tick();timerI=setInterval(tick,500)}
+const perOf=e=>{const d=e.unit==='шт'?e.amount:e.amount/100;return d?{kcal:e.kcal/d,p:e.p/d,f:e.f/d,c:e.c/d}:null};
+const A={
+ settings:sheetSettings,
+ goTrain(){setTab('train')},
+ editLines:sheetLines,
+ saveLines(){for(let i=0;i<4;i++)S.lines[i]=$('#ln'+i).value.trim()||S.lines[i];save();closeSheet();render()},
+ weight:sheetWeight,
+ toggleMorning(el){el.classList.toggle('on');el.querySelector('.box').textContent=el.classList.contains('on')?'✓':''},
+ saveWeight(){const kg=num($('#wKg').value),wa=num($('#wWaist').value);
+  if(isNaN(kg)||kg<35||kg>250){toast('Введи вес в кг');return}
+  const mo=$('#wMorning');if(mo&&!mo.classList.contains('on')){toast('Вечерний вес не пишем. Отметь, если это утро.');return}
+  const k=today();S.weights=S.weights.filter(w=>w.date!==k);S.weights.push({date:k,kg,waist:isNaN(wa)?null:wa});save();closeSheet();render();toast('Вес утра: '+fmt(kg,1)+' кг')},
+ delWeight(){const k=today();S.weights=S.weights.filter(w=>w.date!==k);save();closeSheet();render()},
+ water(el){const D=day(today());D.water=Math.max(0,Math.min(5000,D.water+ +el.dataset.v));save();render()},
+ creatine(){const D=day(today());D.creatine=!D.creatine;save();render()},
+ steps(){const D=day(today());D.steps=!D.steps;save();render()},
+ bjj(){const D=day(today());D.bjj=!D.bjj;save();render()},
+ pikeEasy(){S.pikeEasy=!S.pikeEasy;save();render()},
+ tday(el){const d=+el.dataset.d;trainView=d===now().getDay()?null:d;render()},
+ set(el){const D=day(today()),key=el.dataset.b+'.'+el.dataset.e,i=+el.dataset.i,arr=D.sets[key]||(D.sets[key]=[]);arr[i]=!arr[i];save();
+  const name=el.closest('.ex').querySelector('.nm').textContent;render();if(arr[i])startTimer(el.dataset.rest,name)},
+ eatPlan(el){const i=+el.dataset.i,it=S.plan[i],ps=planState(today())[i];
+  let pid=it.pid,amt=ps.left;
+  if(it.alt&&(el.dataset.alt==='1'||ps.usedAlt)){pid=it.alt;amt=ps.usedAlt?ps.left:it.altAmount}
+  const p=prod(pid),x=logEntry({pid,name:p.name,amount:amt,unit:p.unit,...macroOf(p,amt),meal:mealGuess()});render();
+  toast(`${p.name}: ${fmt(amt,0)} ${p.unit} записано`,'Отменить',()=>{const D=day(today());D.food=D.food.filter(z=>z.id!==x.id);save();render()})},
+ planInfo(){toast('Позиция плана закрыта. Поправить — в «Сегодня съел».')},
+ editPlan:sheetPlan,
+ buck(el){const inp=$('#pl'+S.plan.findIndex(x=>x.pid==='buck'));inp.value=Math.max(0,(num(inp.value)||0)+ +el.dataset.v)},
+ savePlan(){S.plan.forEach((it,i)=>{const v=num($('#pl'+i).value);if(!isNaN(v)&&v>=0)it.amount=v});const a=num($('#plAlt').value),f=S.plan.find(x=>x.alt);if(f&&!isNaN(a))f.altAmount=a;save();closeSheet();render()},
+ resetPlan(){S.plan=JSON.parse(JSON.stringify(DEFAULT_PLAN));save();closeSheet();render()},
+ products:sheetProducts,
+ saveProducts(){document.querySelectorAll('[data-pe]').forEach(inp=>{const p=prod(inp.dataset.pe),v=num(inp.value);if(p&&!isNaN(v)&&v>=0)p[inp.dataset.f]=v});save();closeSheet();render();toast('Продукты сохранены')},
+ delProd(el){S.products=S.products.filter(p=>p.id!==el.dataset.id);save();sheetProducts()},
+ pickProd(el){readFood();const p=prod(el.dataset.id);F.pid=p.id;F.name=p.name;F.unit=p.unit;F.per={kcal:p.kcal,p:p.p,f:p.f,c:p.c};
+  if(isNaN(F.amount)||!F.amount)F.amount=p.unit==='шт'?1:100;Object.assign(F,macroOf(p,F.amount));drawFood()},
+ meal(el){readFood();F.meal=el.dataset.m;drawFood()},
+ fCam(){readFood();PHFORM=true;pickPhoto(true)},
+ fGal(){readFood();PHFORM=true;pickPhoto(false)},
+ saveProd(){readFood();if(!F.name){toast('Нужно название');return}if(isNaN(F.amount)||F.amount<=0||isNaN(F.kcal)){toast('Нужны граммы и ккал');return}
+  const unit=F.unit||'г',d=unit==='шт'?F.amount:F.amount/100,per={kcal:F.kcal/d,p:F.p/d,f:F.f/d,c:F.c/d};
+  let p=S.products.find(x=>x.name.toLowerCase()===F.name.toLowerCase());
+  if(p)Object.assign(p,per);else{p={id:'u'+uid(),name:F.name,unit,...per};S.products.push(p)}
+  F.pid=p.id;F.per=per;save();drawFood();toast('Сохранено в мои продукты')},
+ saveFood(){readFood();if(!F.name){toast('Нужно название');return}if(isNaN(F.amount)||F.amount<=0){toast('Нужны граммы');return}if(isNaN(F.kcal)){toast('Нужны ккал');return}
+  const e={pid:F.pid||null,name:F.name,amount:F.amount,unit:F.unit||'г',kcal:F.kcal,p:F.p,f:F.f,c:F.c,meal:F.meal,photo:F.photo||null};
+  if(F.id){const x=day(today()).food.find(z=>z.id===F.id);if(x)Object.assign(x,e);save()}else logEntry(e);
+  closeSheet();render();toast('Записано')},
+ editEntry(el){const e=day(today()).food.find(z=>z.id===el.dataset.id);if(!e)return;const p=e.pid?prod(e.pid):null;
+  sheetFood({...e,per:p?{kcal:p.kcal,p:p.p,f:p.f,c:p.c}:perOf(e)})},
+ delFood(){const D=day(today());D.food=D.food.filter(z=>z.id!==F.id);save();closeSheet();render()},
+ phManual(){const th=PH?PH.thumb:null;closeSheet();setTimeout(()=>sheetFood({photo:th}),260)},
+ phNo(){closeSheet();toast('Не добавлено')},
+ phRetry(){PH.state='loading';drawPhoto();analyze()},
+ phRetake(){closeSheet();PHFORM=false;pickPhoto(true)},
+ phEditG(){PH.editG=true;drawPhoto();setTimeout(()=>{const i=$('#phG');if(i){i.focus();i.select()}},60)},
+ phSetG(){const g=num($('#phG').value);if(g>0){PH.grams=g;PH.editG=false;drawPhoto()}},
+ phMeal(el){PH.meal=el.dataset.m;drawPhoto()},
+ phAdd(){if(PH.editG){const g=num($('#phG').value);if(g>0)PH.grams=g}const r=PH.res,g=PH.grams,m=g/r.grams;
+  logEntry({pid:null,name:r.what,amount:g,unit:'г',kcal:r.kcal*m,p:r.p*m,f:r.f*m,c:r.c*m,meal:PH.meal||mealGuess(),photo:PH.thumb,ai:true});closeSheet();render();toast('Добавлено по фото')},
+ saveAI(){S.ai.key=$('#aiKey').value.trim();S.ai.base=$('#aiBase').value.trim()||'https://api.x.ai/v1';S.ai.model=$('#aiModel').value.trim()||'grok-4.7';save();closeSheet();toast(S.ai.key?'Ключ сохранён на телефоне':'Ключ не задан')},
+ export(){const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='baza-'+today()+'.json';a.click()},
+ import(){$('#impIn').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.days)throw 0;S=Object.assign(defaults(),d);save();closeSheet();render();toast('Копия загружена')}catch(x){toast('Файл не подходит')}};$('#impIn').click()},
+ wipe(){if(confirm('Стереть все данные на этом телефоне?')){localStorage.removeItem(KEY);S=defaults();save();closeSheet();render()}},
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const f=A[el.dataset.a];if(f){e.preventDefault();f(el)}});
+$('#sheetBg').onclick=closeSheet;
+$('#timerStop').onclick=()=>{clearInterval(timerI);$('#timer').style.display='none'};
+function setTab(t){TAB=t;trainView=null;localStorage.setItem('baza.tab',t);render();window.scrollTo(0,0)}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+$('#fabAdd').onclick=()=>sheetFood();
+$('#fabPhoto').onclick=()=>{PHFORM=false;openSheet(`<h2>Фото еды</h2><div class="sm mut">${S.ai.key?'ИИ посчитает КБЖУ, в день попадёт только то, что подтвердишь.':'Ключ ИИ не задан: фото прикрепится, цифры впишешь сам.'}</div><div class="grid2" style="margin-top:14px"><button class="btn pri" data-a="srcCam">📷 Камера</button><button class="btn" data-a="srcGal">🖼 Галерея</button></div>`)};
+A.srcCam=()=>{closeSheet();pickPhoto(true)};A.srcGal=()=>{closeSheet();pickPhoto(false)};
+['#camIn','#galIn'].forEach(s=>$(s).addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';const ff=PHFORM;PHFORM=false;onPhoto(f,ff)}));
+function onScroll(){const h=$('#hdr');if(h)h.classList.toggle('compact',window.scrollY>80)}
+window.addEventListener('scroll',onScroll,{passive:true});
+let lastDay=today();
+setInterval(()=>{if(sheetOpen())return;if(today()!==lastDay){lastDay=today();trainView=null}render()},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!sheetOpen())render()});
+render();
+if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body></html>
